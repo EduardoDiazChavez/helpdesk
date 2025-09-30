@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { XCircle, Building, Monitor } from 'lucide-react';
 

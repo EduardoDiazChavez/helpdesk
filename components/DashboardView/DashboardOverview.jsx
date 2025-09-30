@@ -7,8 +7,8 @@ import {
   Monitor,
   FileText
 } from 'lucide-react';
-import QuickActionCard from './QuickActionCard';
-import RequestSummaryCard from './RequestSummaryCard';
+import QuickActionCard from './SubComponents/QuickActionCard';
+import RequestSummaryCard from './SubComponents/RequestSummaryCard';
 
 const DashboardOverview = ({ requests, setActiveView }) => {
   const stats = {

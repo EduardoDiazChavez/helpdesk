@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Eye, FileText, User, Calendar, Building, Monitor } from 'lucide-react';
-import RequestDetailModal from './RequestDetailModal';
+import RequestDetailModal from './SubComponents/RequestDetailModal';
 
 const RequestHistory = ({ requests }) => {
   const [searchTerm, setSearchTerm] = useState('');
