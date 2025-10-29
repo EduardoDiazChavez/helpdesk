@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from 'react';
 import { XCircle, Building, Monitor } from 'lucide-react';
-
-const NewRequestForm = ({ onSubmit, onCancel }) => {
+import { DataProcesos } from '../../Data/DataProcesos';
+const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => {
   const [formData, setFormData] = useState({
-    type: 'maintenance',
+    type: initialType,
     title: '',
     description: '',
     priority: 'medium',
     requestedBy: '',
-    department: '',
+    proceso: '',
     location: '',
     urgencyReason: ''
   });
@@ -22,7 +22,7 @@ const NewRequestForm = ({ onSubmit, onCancel }) => {
     if (!formData.title.trim()) newErrors.title = 'El título es requerido';
     if (!formData.description.trim()) newErrors.description = 'La descripción es requerida';
     if (!formData.requestedBy.trim()) newErrors.requestedBy = 'El solicitante es requerido';
-    if (!formData.department.trim()) newErrors.department = 'El departamento es requerido';
+    if (!formData.proceso.trim()) newErrors.proceso = 'El proceso es requerido';
     if (!formData.location.trim()) newErrors.location = 'La ubicación es requerida';
 
     if (Object.keys(newErrors).length > 0) {
@@ -37,7 +37,7 @@ const NewRequestForm = ({ onSubmit, onCancel }) => {
       description: '',
       priority: 'medium',
       requestedBy: '',
-      department: '',
+      proceso: '',
       location: '',
       urgencyReason: ''
     });
@@ -118,27 +118,21 @@ const NewRequestForm = ({ onSubmit, onCancel }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Departamento *
+                Proceso *
               </label>
               <select
-                value={formData.department}
-                onChange={(e) => handleChange('department', e.target.value)}
+                value={formData.proceso}
+                onChange={(e) => handleChange('proceso', e.target.value)}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.department ? 'border-red-300' : 'border-gray-300'
+                  errors.proceso ? 'border-red-300' : 'border-gray-300'
                 }`}
               >
-                <option value="">Seleccionar departamento</option>
-                <option value="Administración">Administración</option>
-                <option value="Cardiología">Cardiología</option>
-                <option value="Neurología">Neurología</option>
-                <option value="Pediatría">Pediatría</option>
-                <option value="Radiología">Radiología</option>
-                <option value="Laboratorio">Laboratorio</option>
-                <option value="Enfermería">Enfermería</option>
-                <option value="Mantenimiento">Mantenimiento</option>
-                <option value="Sistemas">Sistemas</option>
+                <option value="">Seleccionar proceso</option>
+                {DataProcesos.map((proceso) => (
+                  <option key={proceso.id} value={proceso.id}>{proceso.name}</option>
+                ))}
               </select>
-              {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
+              {errors.proceso && <p className="text-red-500 text-xs mt-1">{errors.proceso}</p>}
             </div>
           </div>
 

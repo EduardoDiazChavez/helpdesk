@@ -18,7 +18,6 @@ export const Header = () => {
                     <nav className="flex space-x-1">
                         <Link href="/">
                             <p
-                                /*   onClick={() => setActiveView('dashboard')} */
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors `}
                             >
                                 Resumen
@@ -26,7 +25,6 @@ export const Header = () => {
                         </Link>
                         <Link href="/NewRequest">
                             <p
-                                /* onClick={() => setActiveView('new-request')} */
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors `}
                             >
                                 Nueva Solicitud
@@ -34,7 +32,6 @@ export const Header = () => {
                         </Link>
                         <Link href="/History">
                         <p
-                            /*   onClick={() => setActiveView('history')} */
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors `}
                         >
                             Historial

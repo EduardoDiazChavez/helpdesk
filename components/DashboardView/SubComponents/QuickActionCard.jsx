@@ -1,11 +1,14 @@
 import React from 'react';
+import Link from 'next/link';
 
-const QuickActionCard = ({ title, description, icon, onClick }) => {
+const QuickActionCard = ({ title, description, icon, onClick, href  }) => {
+  
   return (
-    <button
-      onClick={onClick}
-      className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors text-left"
-    >
+    <Link href={href}>
+      <button
+        onClick={onClick}
+        className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors text-left w-full"
+      >
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0">
           {icon}
@@ -16,6 +19,7 @@ const QuickActionCard = ({ title, description, icon, onClick }) => {
         </div>
       </div>
     </button>
+    </Link>
   );
 };
 
