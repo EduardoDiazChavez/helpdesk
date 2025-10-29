@@ -1,17 +1,21 @@
 "use client";
-import React, { useState } from 'react';
-import { XCircle, Building, Monitor } from 'lucide-react';
-import { DataProcesos } from '../../Data/DataProcesos';
-const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => {
+import React, { useState } from "react";
+import { XCircle, Building, Monitor } from "lucide-react";
+import { DataProcesos } from "../../Data/DataProcesos";
+const NewRequestForm = ({
+  onSubmit,
+  onCancel,
+  initialType = "maintenance",
+}) => {
   const [formData, setFormData] = useState({
     type: initialType,
-    title: '',
-    description: '',
-    priority: 'medium',
-    requestedBy: '',
-    proceso: '',
-    location: '',
-    urgencyReason: ''
+    title: "",
+    description: "",
+    priority: "medium",
+    requestedBy: "",
+    proceso: "",
+    location: "",
+    urgencyReason: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -19,11 +23,14 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
   const handleSubmit = () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) newErrors.title = 'El título es requerido';
-    if (!formData.description.trim()) newErrors.description = 'La descripción es requerida';
-    if (!formData.requestedBy.trim()) newErrors.requestedBy = 'El solicitante es requerido';
-    if (!formData.proceso.trim()) newErrors.proceso = 'El proceso es requerido';
-    if (!formData.location.trim()) newErrors.location = 'La ubicación es requerida';
+    if (!formData.title.trim()) newErrors.title = "El título es requerido";
+    if (!formData.description.trim())
+      newErrors.description = "La descripción es requerida";
+    if (!formData.requestedBy.trim())
+      newErrors.requestedBy = "El solicitante es requerido";
+    if (!formData.proceso.trim()) newErrors.proceso = "El proceso es requerido";
+    if (!formData.location.trim())
+      newErrors.location = "La ubicación es requerida";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -32,23 +39,23 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
 
     onSubmit(formData);
     setFormData({
-      type: 'maintenance',
-      title: '',
-      description: '',
-      priority: 'medium',
-      requestedBy: '',
-      proceso: '',
-      location: '',
-      urgencyReason: ''
+      type: "maintenance",
+      title: "",
+      description: "",
+      priority: "medium",
+      requestedBy: "",
+      proceso: "",
+      location: "",
+      urgencyReason: "",
     });
     setErrors({});
     onCancel();
   };
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -56,7 +63,9 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Nueva Solicitud</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Nueva Solicitud
+          </h2>
           <button
             onClick={onCancel}
             className="text-gray-400 hover:text-gray-600"
@@ -73,28 +82,32 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => handleChange('type', 'maintenance')}
+                onClick={() => handleChange("type", "maintenance")}
                 className={`p-4 border rounded-lg text-left transition-colors ${
-                  formData.type === 'maintenance'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
+                  formData.type === "maintenance"
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <Building className="h-6 w-6 mb-2" />
                 <div className="font-medium">Mantenimiento</div>
-                <div className="text-sm text-gray-600">Infraestructura y instalaciones</div>
+                <div className="text-sm text-gray-600">
+                  Infraestructura y instalaciones
+                </div>
               </button>
               <button
-                onClick={() => handleChange('type', 'tech_support')}
+                onClick={() => handleChange("type", "tech_support")}
                 className={`p-4 border rounded-lg text-left transition-colors ${
-                  formData.type === 'tech_support'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
+                  formData.type === "tech_support"
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <Monitor className="h-6 w-6 mb-2" />
                 <div className="font-medium">Soporte Técnico</div>
-                <div className="text-sm text-gray-600">Equipos y tecnología</div>
+                <div className="text-sm text-gray-600">
+                  Equipos y tecnología
+                </div>
               </button>
             </div>
           </div>
@@ -108,13 +121,17 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
               <input
                 type="text"
                 value={formData.requestedBy}
-                onChange={(e) => handleChange('requestedBy', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.requestedBy ? 'border-red-300' : 'border-gray-300'
+                onChange={(e) => handleChange("requestedBy", e.target.value)}
+                className={` h-10 w-full px-3 py-2 border rounded-lg focus:ring-0 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.requestedBy ? "border-red-300" : "border-gray-300"
                 }`}
                 placeholder="Nombre completo"
               />
-              {errors.requestedBy && <p className="text-red-500 text-xs mt-1">{errors.requestedBy}</p>}
+              {errors.requestedBy && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.requestedBy}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -122,17 +139,21 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
               </label>
               <select
                 value={formData.proceso}
-                onChange={(e) => handleChange('proceso', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.proceso ? 'border-red-300' : 'border-gray-300'
+                onChange={(e) => handleChange("proceso", e.target.value)}
+                className={`h-10 w-full px-3  py-2 border rounded-lg focus:ring-0 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.proceso ? "border-red-300" : "border-gray-300"
                 }`}
               >
                 <option value="">Seleccionar proceso</option>
                 {DataProcesos.map((proceso) => (
-                  <option key={proceso.id} value={proceso.id}>{proceso.name}</option>
+                  <option key={proceso.id} value={proceso.id}>
+                    {proceso.name}
+                  </option>
                 ))}
               </select>
-              {errors.proceso && <p className="text-red-500 text-xs mt-1">{errors.proceso}</p>}
+              {errors.proceso && (
+                <p className="text-red-500 text-xs mt-1">{errors.proceso}</p>
+              )}
             </div>
           </div>
 
@@ -143,13 +164,15 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => handleChange('title', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.title ? 'border-red-300' : 'border-gray-300'
+              onChange={(e) => handleChange("title", e.target.value)}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500 ${
+                errors.title ? "border-red-300" : "border-gray-300"
               }`}
               placeholder="Resumen breve del problema"
             />
-            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
+            {errors.title && (
+              <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+            )}
           </div>
 
           <div>
@@ -159,13 +182,15 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
             <input
               type="text"
               value={formData.location}
-              onChange={(e) => handleChange('location', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.location ? 'border-red-300' : 'border-gray-300'
+              onChange={(e) => handleChange("location", e.target.value)}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500 ${
+                errors.location ? "border-red-300" : "border-gray-300"
               }`}
               placeholder="Piso, sala, consultorio, etc."
             />
-            {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
+            {errors.location && (
+              <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+            )}
           </div>
 
           <div>
@@ -174,14 +199,16 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
+              onChange={(e) => handleChange("description", e.target.value)}
               rows={4}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.description ? 'border-red-300' : 'border-gray-300'
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500 ${
+                errors.description ? "border-red-300" : "border-gray-300"
               }`}
               placeholder="Describe el problema detalladamente..."
             />
-            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">{errors.description}</p>
+            )}
           </div>
 
           <div>
@@ -190,24 +217,28 @@ const NewRequestForm = ({ onSubmit, onCancel, initialType = 'maintenance' }) => 
             </label>
             <select
               value={formData.priority}
-              onChange={(e) => handleChange('priority', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => handleChange("priority", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="low">Baja - No afecta operaciones</option>
               <option value="medium">Media - Afecta parcialmente</option>
-              <option value="high">Alta - Afecta operaciones importantes</option>
-              <option value="urgent">Urgente - Afecta atención al paciente</option>
+              <option value="high">
+                Alta - Afecta operaciones importantes
+              </option>
+              <option value="urgent">
+                Urgente - Afecta atención al paciente
+              </option>
             </select>
           </div>
 
-          {formData.priority === 'urgent' && (
+          {formData.priority === "urgent" && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Razón de Urgencia
               </label>
               <textarea
                 value={formData.urgencyReason}
-                onChange={(e) => handleChange('urgencyReason', e.target.value)}
+                onChange={(e) => handleChange("urgencyReason", e.target.value)}
                 rows={2}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Explica por qué es urgente..."
