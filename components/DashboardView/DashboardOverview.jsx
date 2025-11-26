@@ -33,7 +33,7 @@ const DashboardOverview = ({ requests, setActiveView }) => {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Acciones Rápidas
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
             title="Solicitud de Mantenimiento"
             description="Reportar problemas de infraestructura"
@@ -47,6 +47,13 @@ const DashboardOverview = ({ requests, setActiveView }) => {
             icon={<Monitor className="h-8 w-8 text-green-600" />}
             onClick={() => setActiveView("new-request")}
             href="/NewRequest?type=tech_support"
+          />
+          <QuickActionCard
+            title="Ver solicitudes"
+            description="Consulta el estado de tus solicitudes"
+            icon={<Monitor className="h-8 w-8 text-purple-600" />}
+            onClick={() => setActiveView("requests")}
+            href="/requests"
           />
         </div>
       </div>

@@ -8,8 +8,31 @@ const DashboardContent = () => {
   const searchParams = useSearchParams();
   const requestType = searchParams.get("type") || "maintenance";
 
-  const handleSubmit = (formData: unknown) => {
-    console.log("Datos del formulario:", formData);
+  const handleSubmit = async (formData: any) => {
+    const typeName =
+      formData.type === "tech_support" ? "Soporte Tecnico" : "Mantenimiento";
+
+    const body = {
+      subject: formData.title,
+      description: formData.description,
+      location: formData.location,
+      processId: formData.proceso,
+      priorityName: formData.priority,
+      requestTypeName: typeName,
+    };
+
+    const res = await fetch("/api/requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      router.push("/requests");
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || "No se pudo enviar la solicitud");
+    }
   };
 
   const handleCancel = () => {

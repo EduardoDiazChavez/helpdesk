@@ -4,12 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const forbidden = await requireSystemAdmin(req);
   if (forbidden) return forbidden;
 
-  const companyId = Number(params.id);
+  const { id } = await params;
+  const companyId = Number(id);
   if (Number.isNaN(companyId)) {
     return NextResponse.json({ error: "Invalid company id" }, { status: 400 });
   }
@@ -41,12 +42,13 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const forbidden = await requireSystemAdmin(req);
   if (forbidden) return forbidden;
 
-  const companyId = Number(params.id);
+  const { id } = await params;
+  const companyId = Number(id);
   if (Number.isNaN(companyId)) {
     return NextResponse.json({ error: "Invalid company id" }, { status: 400 });
   }
@@ -84,12 +86,13 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const forbidden = await requireSystemAdmin(req);
   if (forbidden) return forbidden;
 
-  const companyId = Number(params.id);
+  const { id } = await params;
+  const companyId = Number(id);
   if (Number.isNaN(companyId)) {
     return NextResponse.json({ error: "Invalid company id" }, { status: 400 });
   }

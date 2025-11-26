@@ -18,6 +18,8 @@ model User {
   createdDate  DateTime       @default(now()) @map("created_date")
   role         Role           @relation(fields: [roleId], references: [id])
   userCompanies UserCompany[]
+  requests     Request[]
+  requestLogs  RequestLog[]
 
   @@map("user")
 }
@@ -28,6 +30,7 @@ model Company {
   slug          String         @unique
   address       String
   userCompanies UserCompany[]
+  requests      Request[]
 
   @@map("company")
 }
@@ -51,4 +54,76 @@ model Role {
   users User[]
 
   @@map("role")
+}
+
+model RequestType {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  requests  Request[]
+
+  @@map("request_type")
+}
+
+model Process {
+  id          String    @id
+  name        String    @unique
+  description String
+  code        String
+  requests    Request[]
+
+  @@map("process")
+}
+
+model Priority {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  number   Int
+  requests Request[]
+
+  @@map("priority")
+}
+
+model RequestStatus {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  requests Request[]
+
+  @@map("request_status")
+}
+
+model Request {
+  id              Int           @id @default(autoincrement())
+  requestTypeId   Int           @map("request_type_id")
+  requesterId     Int           @map("requester_id")
+  processId       String        @map("process_id")
+  subject         String
+  location        String
+  description     String
+  priorityId      Int           @map("priority_id")
+  dateRequested   DateTime      @default(now()) @map("date_requested")
+  requestStatusId Int           @map("request_status_id")
+  companyId       Int           @map("company_id")
+
+  requestType RequestType @relation(fields: [requestTypeId], references: [id])
+  requester   User        @relation(fields: [requesterId], references: [id])
+  process     Process     @relation(fields: [processId], references: [id])
+  priority    Priority    @relation(fields: [priorityId], references: [id])
+  status      RequestStatus @relation(fields: [requestStatusId], references: [id])
+  company     Company     @relation(fields: [companyId], references: [id])
+  logs        RequestLog[]
+
+  @@map("request")
+}
+
+model RequestLog {
+  id         Int      @id @default(autoincrement())
+  requestId  Int      @map("request_id")
+  userId     Int      @map("user_id")
+  actionDone String   @map("action_done")
+  logDate    DateTime @default(now()) @map("log_date")
+
+  request Request @relation(fields: [requestId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@map("request_log")
 }

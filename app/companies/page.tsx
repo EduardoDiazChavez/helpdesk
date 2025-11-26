@@ -13,6 +13,7 @@ type CompanyUser = {
 type Company = {
   id: number;
   name: string;
+  slug: string;
   address: string;
   userCompanies: {
     isAdmin: boolean;
@@ -32,6 +33,7 @@ const CompaniesPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
+    slug: "",
     address: "",
     includeUser: true,
     userEmail: "",
@@ -67,6 +69,7 @@ const CompaniesPage = () => {
   const resetForm = () => {
     setForm({
       name: "",
+      slug: "",
       address: "",
       includeUser: true,
       userEmail: "",
@@ -84,6 +87,7 @@ const CompaniesPage = () => {
     try {
       const body: any = {
         name: form.name,
+        slug: form.slug,
         address: form.address,
       };
 
@@ -225,6 +229,23 @@ const CompaniesPage = () => {
                   required
                   placeholder="Ej. Clínica Norte"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Slug
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={form.slug}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, slug: e.target.value }))
+                  }
+                  required
+                  placeholder="clinica-norte"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Identificador único en minúsculas y sin espacios.
+                </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

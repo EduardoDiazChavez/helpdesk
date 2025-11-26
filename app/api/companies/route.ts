@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 
 type CreateCompanyBody = {
   name: string;
+  slug: string;
   address: string;
   user?: {
     email: string;
@@ -46,9 +47,9 @@ export async function POST(req: NextRequest) {
 
   const body = (await req.json()) as CreateCompanyBody;
 
-  if (!body?.name || !body?.address) {
+  if (!body?.name || !body?.address || !body?.slug) {
     return NextResponse.json(
-      { error: "name and address are required" },
+      { error: "name, slug and address are required" },
       { status: 400 }
     );
   }
@@ -68,6 +69,7 @@ export async function POST(req: NextRequest) {
     const company = await prisma.company.create({
       data: {
         name: body.name,
+        slug: body.slug,
         address: body.address,
         userCompanies: body.user
           ? {

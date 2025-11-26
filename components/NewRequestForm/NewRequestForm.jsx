@@ -11,7 +11,7 @@ const NewRequestForm = ({
     type: initialType,
     title: "",
     description: "",
-    priority: "medium",
+    priority: "Media - Afecta parcialmente",
     requestedBy: "",
     proceso: "",
     location: "",
@@ -23,11 +23,9 @@ const NewRequestForm = ({
   const handleSubmit = () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) newErrors.title = "El título es requerido";
+    if (!formData.title.trim()) newErrors.title = "El asunto es requerido";
     if (!formData.description.trim())
       newErrors.description = "La descripción es requerida";
-    if (!formData.requestedBy.trim())
-      newErrors.requestedBy = "El solicitante es requerido";
     if (!formData.proceso.trim()) newErrors.proceso = "El proceso es requerido";
     if (!formData.location.trim())
       newErrors.location = "La ubicación es requerida";
@@ -42,7 +40,7 @@ const NewRequestForm = ({
       type: "maintenance",
       title: "",
       description: "",
-      priority: "medium",
+      priority: "Media - Afecta parcialmente",
       requestedBy: "",
       proceso: "",
       location: "",
@@ -114,25 +112,6 @@ const NewRequestForm = ({
 
           {/* Información básica */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Solicitante *
-              </label>
-              <input
-                type="text"
-                value={formData.requestedBy}
-                onChange={(e) => handleChange("requestedBy", e.target.value)}
-                className={` h-10 w-full px-3 py-2 border rounded-lg focus:ring-0 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.requestedBy ? "border-red-300" : "border-gray-300"
-                }`}
-                placeholder="Nombre completo"
-              />
-              {errors.requestedBy && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.requestedBy}
-                </p>
-              )}
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Proceso *
@@ -220,12 +199,12 @@ const NewRequestForm = ({
               onChange={(e) => handleChange("priority", e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="low">Baja - No afecta operaciones</option>
-              <option value="medium">Media - Afecta parcialmente</option>
-              <option value="high">
+              <option value="Baja - No afecta operaciones">Baja - No afecta operaciones</option>
+              <option value="Media - Afecta parcialmente">Media - Afecta parcialmente</option>
+              <option value="Alta - Afecta operaciones importantes">
                 Alta - Afecta operaciones importantes
               </option>
-              <option value="urgent">
+              <option value="Urgente - Afecta atención al paciente">
                 Urgente - Afecta atención al paciente
               </option>
             </select>

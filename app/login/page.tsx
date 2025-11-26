@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail, ShieldCheck } from "lucide-react";
 
-const Login = () => {
+const LoginContent = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -196,5 +196,11 @@ const Login = () => {
     </div>
   );
 };
+
+const Login = () => (
+  <Suspense fallback={<div className="p-8 text-center">Cargando...</div>}>
+    <LoginContent />
+  </Suspense>
+);
 
 export default Login;
