@@ -37,6 +37,13 @@ export const Header = () => {
                             Historial
                         </p>
                         </Link>
+                        <Link href="/companies">
+                            <p
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors `}
+                            >
+                                Empresas
+                            </p>
+                        </Link>
                     </nav>
                 </div>
             </div>

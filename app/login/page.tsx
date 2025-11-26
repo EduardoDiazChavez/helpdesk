@@ -2,16 +2,39 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail, ShieldCheck } from "lucide-react";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    setError("");
     setIsSubmitting(true);
-    setTimeout(() => setIsSubmitting(false), 900);
+
+    const redirect = searchParams.get("redirect") || "/";
+
+    fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || "No se pudo iniciar sesión");
+        }
+        router.replace(redirect);
+      })
+      .catch((err: Error) => {
+        setError(err.message);
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   const updateField = (field: "email" | "password", value: string) => {
@@ -135,6 +158,9 @@ const Login = () => {
               <span>{isSubmitting ? "Validando..." : "Ingresar"}</span>
               <ArrowRight className="h-4 w-4" />
             </button>
+            {error && (
+              <p className="text-sm text-red-600">{error}</p>
+            )}
           </form>
 
           <div className="relative py-4">
