@@ -141,6 +141,22 @@ const RequestsPage = () => {
     return "bg-yellow-100 text-yellow-800 border border-yellow-200";
   };
 
+  const translateStatus = (name: string) => {
+    switch (name) {
+      case "Pending":
+        return "Pendiente";
+      case "In Progress":
+        return "En progreso";
+      case "Resolved":
+      case "Completed":
+        return "Completada";
+      case "Cancelled":
+        return "Cancelada";
+      default:
+        return name;
+    }
+  };
+
   const visibleCompanyName = useMemo(() => {
     if (isSysAdmin && companyFilter) {
       return companies.find((c) => c.slug === companyFilter)?.name || "Todas";
@@ -221,7 +237,7 @@ const RequestsPage = () => {
               <option value="">Todos los estados</option>
               {statuses.map((s) => (
                 <option key={s.id} value={s.name}>
-                  {s.name}
+                  {translateStatus(s.name)}
                 </option>
               ))}
             </select>
@@ -276,13 +292,13 @@ const RequestsPage = () => {
                 <div className="px-6 py-4 grid gap-3 md:grid-cols-[2fr,1fr]">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge(
-                          req.status.name
-                        )}`}
-                      >
-                        {req.status.name}
-                      </span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge(
+                        req.status.name
+                      )}`}
+                    >
+                      {translateStatus(req.status.name)}
+                    </span>
                       <span
                         className={`text-xs font-medium ${priorityTone(
                           req.priority.name

@@ -22,6 +22,8 @@ const statusBadge = (name: string) => {
     return "bg-green-100 text-green-800 border border-green-200";
   if (name === "In Progress")
     return "bg-blue-100 text-blue-800 border border-blue-200";
+  if (name === "Cancelled")
+    return "bg-gray-100 text-gray-800 border border-gray-200";
   return "bg-yellow-100 text-yellow-800 border border-yellow-200";
 };
 
@@ -29,7 +31,18 @@ const translateStatus = (name: string) => {
   if (name === "Resolved" || name === "Completed") return "Completada";
   if (name === "In Progress") return "En progreso";
   if (name === "Pending") return "Pendiente";
+  if (name === "Cancelled") return "Cancelada";
   return name;
+};
+
+const translateLogText = (text: string) => {
+  if (!text) return "";
+  return text
+    .replace(/Pending/gi, "Pendiente")
+    .replace(/In Progress/gi, "En progreso")
+    .replace(/Resolved/gi, "Completada")
+    .replace(/Completed/gi, "Completada")
+    .replace(/Cancelled/gi, "Cancelada");
 };
 
 const priorityTone = (name: string) => {
@@ -308,7 +321,9 @@ const RequestDetailPage = () => {
                 <p className="text-sm font-medium text-gray-900">
                   {log.user?.name} {log.user?.lastName}
                 </p>
-                <p className="text-sm text-gray-600">{log.actionDone}</p>
+                <p className="text-sm text-gray-600">
+                  {translateLogText(log.actionDone)}
+                </p>
               </div>
               <div className="text-xs text-gray-500">
                 {new Date(log.logDate).toLocaleString()}

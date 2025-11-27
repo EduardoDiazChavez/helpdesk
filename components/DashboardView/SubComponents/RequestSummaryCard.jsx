@@ -9,8 +9,8 @@ const RequestSummaryCard = ({ request }) => {
   const statusConfig = {
     Pending: { color: "bg-yellow-100 text-yellow-800", label: "Pendiente" },
     "In Progress": { color: "bg-blue-100 text-blue-800", label: "En progreso" },
-    Resolved: { color: "bg-green-100 text-green-800", label: "Completada" },
     Completed: { color: "bg-green-100 text-green-800", label: "Completada" },
+    Cancelled: { color: "bg-gray-100 text-gray-800", label: "Cancelada" },
   };
 
   const priorityTone = () => {

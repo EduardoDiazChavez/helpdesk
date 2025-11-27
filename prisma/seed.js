@@ -183,13 +183,7 @@ async function main() {
     )
   );
 
-  const requestStatuses = [
-    "Pending",
-    "In Progress",
-    "Resolved",
-    "Completed",
-    "Cancelled",
-  ];
+  const requestStatuses = ["Pending", "In Progress", "Completed", "Cancelled"];
   await Promise.all(
     requestStatuses.map((name) =>
       prisma.requestStatus.upsert({
@@ -199,6 +193,7 @@ async function main() {
       })
     )
   );
+  await prisma.requestStatus.deleteMany({ where: { name: "Resolved" } });
 
   const passwordHash = await bcrypt.hash("Admin123!", 10);
 
