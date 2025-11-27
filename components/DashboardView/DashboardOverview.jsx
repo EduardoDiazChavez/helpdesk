@@ -63,7 +63,7 @@ const DashboardOverview = ({ requests, setActiveView }) => {
             Solicitudes Recientes
           </h2>
           <Link
-            href="/History"
+            href="/requests"
             className="text-blue-600 hover:text-blue-700 text-sm font-medium"
           >
             <p className="text-blue-600 hover:text-blue-700 text-sm font-medium">

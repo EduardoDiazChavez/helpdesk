@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Settings } from 'lucide-react';
 import DashboardOverview from '../DashboardView/DashboardOverview';
 import NewRequestForm from '../NewRequestForm/NewRequestForm';
-import RequestHistory from '../RequestHistory/RequestHistory';
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState('dashboard');
@@ -69,7 +68,6 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeView === 'dashboard' && <DashboardOverview requests={requests} setActiveView={setActiveView} />}
         {activeView === 'new-request' && <NewRequestForm onSubmit={addRequest} onCancel={() => setActiveView('dashboard')} />}
-        {activeView === 'history' && <RequestHistory requests={requests} />}
       </div>
     </div>
   );
