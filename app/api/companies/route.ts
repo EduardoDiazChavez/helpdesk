@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 
 type CreateCompanyBody = {
   name: string;
-  slug: string;
   address: string;
   user?: {
     email: string;
@@ -14,6 +13,26 @@ type CreateCompanyBody = {
     password: string;
     isAdmin?: boolean;
   };
+};
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+
+const ensureUniqueSlug = async (base: string) => {
+  let slug = slugify(base);
+  let counter = 1;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const exists = await prisma.company.findUnique({ where: { slug } });
+    if (!exists) return slug;
+    slug = `${slugify(base)}-${counter}`;
+    counter += 1;
+  }
 };
 
 export async function GET(req: NextRequest) {
@@ -47,12 +66,14 @@ export async function POST(req: NextRequest) {
 
   const body = (await req.json()) as CreateCompanyBody;
 
-  if (!body?.name || !body?.address || !body?.slug) {
+  if (!body?.name || !body?.address) {
     return NextResponse.json(
-      { error: "name, slug and address are required" },
+      { error: "name and address are required" },
       { status: 400 }
     );
   }
+
+  const slug = await ensureUniqueSlug(body.name);
 
   const roleCompanyAdmin = await prisma.role.findUnique({
     where: { name: "Company Administrator" },
@@ -69,7 +90,7 @@ export async function POST(req: NextRequest) {
     const company = await prisma.company.create({
       data: {
         name: body.name,
-        slug: body.slug,
+        slug,
         address: body.address,
         userCompanies: body.user
           ? {

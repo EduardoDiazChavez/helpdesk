@@ -33,7 +33,6 @@ const CompaniesPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
-    slug: "",
     address: "",
     includeUser: true,
     userEmail: "",
@@ -69,7 +68,6 @@ const CompaniesPage = () => {
   const resetForm = () => {
     setForm({
       name: "",
-      slug: "",
       address: "",
       includeUser: true,
       userEmail: "",
@@ -87,7 +85,6 @@ const CompaniesPage = () => {
     try {
       const body: any = {
         name: form.name,
-        slug: form.slug,
         address: form.address,
       };
 
@@ -232,26 +229,9 @@ const CompaniesPage = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Slug
-                </label>
-                <input
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  value={form.slug}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, slug: e.target.value }))
-                  }
-                  required
-                  placeholder="clinica-norte"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Identificador único en minúsculas y sin espacios.
-                </p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Dirección
                 </label>
-                <input
+                <textarea
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={form.address}
                   onChange={(e) =>
@@ -259,6 +239,7 @@ const CompaniesPage = () => {
                   }
                   required
                   placeholder="Av. Salud 123"
+                  rows={3}
                 />
               </div>
 
@@ -392,7 +373,7 @@ const CompaniesPage = () => {
                               }))
                             }
                           />
-                          <input
+                          <textarea
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             value={editForm.address}
                             onChange={(e) =>
@@ -401,6 +382,7 @@ const CompaniesPage = () => {
                                 address: e.target.value,
                               }))
                             }
+                            rows={2}
                           />
                         </div>
                       ) : (
