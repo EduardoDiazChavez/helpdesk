@@ -20,22 +20,20 @@ export async function GET(req: NextRequest) {
 
   const skip = (page - 1) * pageSize;
 
-  const where: any = {
-    AND: [],
-  };
+  const conditions: any[] = [];
 
   if (search) {
-    where.AND.push({
+    conditions.push({
       OR: [
-        { email: { contains: search, mode: "insensitive" } },
-        { name: { contains: search, mode: "insensitive" } },
-        { lastName: { contains: search, mode: "insensitive" } },
+        { email: { contains: search } },
+        { name: { contains: search } },
+        { lastName: { contains: search } },
       ],
     });
   }
 
   if (role) {
-    where.AND.push({
+    conditions.push({
       role: {
         name: role,
       },
@@ -43,7 +41,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (companySlug) {
-    where.AND.push({
+    conditions.push({
       userCompanies: {
         some: {
           company: {
@@ -53,6 +51,8 @@ export async function GET(req: NextRequest) {
       },
     });
   }
+
+  const where = conditions.length ? { AND: conditions } : undefined;
 
   const [users, total] = await Promise.all([
     prisma.user.findMany({
