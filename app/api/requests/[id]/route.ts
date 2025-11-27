@@ -17,7 +17,7 @@ const includeRequest = {
   },
   company: true,
   logs: {
-    orderBy: { logDate: "desc" },
+    orderBy: { logDate: "desc" as const },
     include: {
       user: {
         select: { id: true, email: true, name: true, lastName: true },
@@ -28,14 +28,14 @@ const includeRequest = {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getSessionFromRequest(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const requestId = Number(params.id);
+  const { id } = await params;
+  const requestId = Number(id);
   if (Number.isNaN(requestId)) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
@@ -73,14 +73,14 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getSessionFromRequest(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const requestId = Number(params.id);
+  const { id } = await params;
+  const requestId = Number(id);
   if (Number.isNaN(requestId)) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
