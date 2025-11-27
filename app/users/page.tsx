@@ -107,6 +107,12 @@ const UsersPage = () => {
       setCompanies(
         data.map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }))
       );
+      if (data.length) {
+        setForm((prev) => ({
+          ...prev,
+          companySlug: prev.companySlug || data[0].slug,
+        }));
+      }
     }
   };
 
@@ -325,7 +331,7 @@ const UsersPage = () => {
               </div>
               <div>
                 <label className="block text-xs text-gray-600 mb-1">
-                  Empresa (opcional)
+                  Empresa *
                 </label>
                 <select
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -336,8 +342,8 @@ const UsersPage = () => {
                       companySlug: e.target.value,
                     }))
                   }
+                  required
                 >
-                  <option value="">Sin empresa</option>
                   {companies.map((c) => (
                     <option key={c.id} value={c.slug}>
                       {c.name}
@@ -516,8 +522,8 @@ const UsersPage = () => {
                                 companySlug: e.target.value,
                               }))
                             }
+                            required
                           >
-                            <option value="">Sin empresa</option>
                             {companies.map((c) => (
                               <option key={c.id} value={c.slug}>
                                 {c.name}

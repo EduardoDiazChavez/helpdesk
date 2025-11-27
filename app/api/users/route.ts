@@ -101,6 +101,12 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+  if (!body.companySlug) {
+    return NextResponse.json(
+      { error: "Company is required" },
+      { status: 400 }
+    );
+  }
 
   const role = await prisma.role.findUnique({
     where: { name: body.roleName || "Regular User" },
@@ -113,17 +119,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let company;
-  if (body.companySlug) {
-    company = await prisma.company.findUnique({
-      where: { slug: body.companySlug },
-    });
-    if (!company) {
-      return NextResponse.json(
-        { error: "Company not found" },
-        { status: 400 }
-      );
-    }
+  const company = await prisma.company.findUnique({
+    where: { slug: body.companySlug },
+  });
+  if (!company) {
+    return NextResponse.json({ error: "Company not found" }, { status: 400 });
   }
 
   const passwordHash = await bcrypt.hash(body.password, 10);
@@ -135,14 +135,12 @@ export async function POST(req: NextRequest) {
       lastName: body.lastName,
       password: passwordHash,
       roleId: role.id,
-      userCompanies: company
-        ? {
-            create: {
-              companyId: company.id,
-              isAdmin: body.isCompanyAdmin ?? false,
-            },
-          }
-        : undefined,
+      userCompanies: {
+        create: {
+          companyId: company.id,
+          isAdmin: body.isCompanyAdmin ?? false,
+        },
+      },
     },
     include: {
       role: true,

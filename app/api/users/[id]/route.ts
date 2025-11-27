@@ -51,8 +51,11 @@ export async function PUT(
       return NextResponse.json({ error: "Company not found" }, { status: 400 });
     }
     companyId = company.id;
-  } else if (body.companySlug === null) {
-    companyId = null;
+  } else {
+    return NextResponse.json(
+      { error: "Company is required" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -61,16 +64,14 @@ export async function PUT(
       data,
     });
 
-    if (companyId !== null) {
-      await prisma.userCompany.deleteMany({ where: { userId } });
-      await prisma.userCompany.create({
-        data: {
-          userId,
-          companyId,
-          isAdmin: body.isCompanyAdmin ?? false,
-        },
-      });
-    }
+    await prisma.userCompany.deleteMany({ where: { userId } });
+    await prisma.userCompany.create({
+      data: {
+        userId,
+        companyId,
+        isAdmin: body.isCompanyAdmin ?? false,
+      },
+    });
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
