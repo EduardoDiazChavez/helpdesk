@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { XCircle, Building, Monitor } from "lucide-react";
-import { DataProcesos } from "../../Data/DataProcesos";
 const NewRequestForm = ({
   onSubmit,
   onCancel,
@@ -124,7 +123,7 @@ const NewRequestForm = ({
                 }`}
               >
                 <option value="">Seleccionar proceso</option>
-                {DataProcesos.map((proceso) => (
+                {[].map((proceso) => (
                   <option key={proceso.id} value={proceso.id}>
                     {proceso.name}
                   </option>
