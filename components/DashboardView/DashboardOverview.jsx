@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Building, Monitor } from "lucide-react";
+import { Building, Monitor, Loader2 } from "lucide-react";
 import QuickActionCard from "./SubComponents/QuickActionCard";
 import RequestSummaryCard from "./SubComponents/RequestSummaryCard";
 import { VistaEstadisticas } from "./SubComponents/VistaEstadisticas";
 import Link from "next/link";
 
-const DashboardOverview = ({ requests, setActiveView }) => {
+const DashboardOverview = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -17,14 +19,38 @@ const DashboardOverview = ({ requests, setActiveView }) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/requests");
+        if (!res.ok) throw new Error("No se pudieron cargar solicitudes");
+        const data = await res.json();
+        setRequests(data);
+      } catch (e) {
+        console.error(e);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
   const stats = {
     total: requests.length,
-    pending: requests.filter((r) => r.status === "pending").length,
-    inProgress: requests.filter((r) => r.status === "in_progress").length,
-    completed: requests.filter((r) => r.status === "completed").length,
+    pending: requests.filter((r) => r.status?.name === "Pending").length,
+    inProgress: requests.filter((r) => r.status?.name === "In Progress").length,
+    completed: requests.filter(
+      (r) => r.status?.name === "Resolved" || r.status?.name === "Completed"
+    ).length,
   };
 
-  const recentRequests = requests.slice(0, 5);
+  const recentRequests = [...requests].sort(
+    (a, b) =>
+      new Date(b.dateRequested).getTime() -
+      new Date(a.dateRequested).getTime()
+  ).slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -38,21 +64,18 @@ const DashboardOverview = ({ requests, setActiveView }) => {
             title="Solicitud de Mantenimiento"
             description="Reportar problemas de infraestructura"
             icon={<Building className="h-8 w-8 text-blue-600" />}
-            onClick={() => setActiveView("new-request")}
             href="/NewRequest?type=maintenance"
           />
           <QuickActionCard
             title="Soporte Técnico"
             description="Solicitar ayuda con equipos tecnológicos"
             icon={<Monitor className="h-8 w-8 text-green-600" />}
-            onClick={() => setActiveView("new-request")}
             href="/NewRequest?type=tech_support"
           />
           <QuickActionCard
             title="Ver solicitudes"
             description="Consulta el estado de tus solicitudes"
             icon={<Monitor className="h-8 w-8 text-purple-600" />}
-            onClick={() => setActiveView("requests")}
             href="/requests"
           />
         </div>
