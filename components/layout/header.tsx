@@ -58,14 +58,14 @@ export const Header = () => {
                     Nueva Solicitud
                   </p>
                 </Link>
-                <Link href="/companies">
-                  <p className="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    Empresas
-                  </p>
-                </Link>
                 <Link href="/users">
                   <p className="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     Usuarios
+                  </p>
+                </Link>
+                <Link href="/admin">
+                  <p className="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Admin
                   </p>
                 </Link>
               </nav>

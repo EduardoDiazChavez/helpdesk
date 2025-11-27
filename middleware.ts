@@ -12,7 +12,7 @@ const PUBLIC_PATHS = [
   "/static",
 ];
 
-const ADMIN_PATHS = ["/companies", "/users", "/api/companies", "/api/users", "/api/roles"];
+const ADMIN_PATHS = ["/admin", "/companies", "/users", "/api/companies", "/api/users", "/api/roles"];
 
 const isPublic = (path: string) =>
   PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
