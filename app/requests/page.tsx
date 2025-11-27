@@ -264,59 +264,62 @@ const RequestsPage = () => {
         ) : (
           <div className="divide-y divide-gray-100">
             {requests.map((req) => (
-              <div
+              <Link
+                href={`/requests/${req.id}`}
                 key={req.id}
-                className="px-6 py-4 grid gap-3 md:grid-cols-[2fr,1fr]"
+                className="block hover:bg-gray-50"
               >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge(
-                        req.status.name
-                      )}`}
-                    >
-                      {req.status.name}
-                    </span>
-                    <span
-                      className={`text-xs font-medium ${priorityTone(
-                        req.priority.name
-                      )}`}
-                    >
-                      {req.priority.name}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(req.dateRequested).toLocaleString()}
-                    </span>
+                <div className="px-6 py-4 grid gap-3 md:grid-cols-[2fr,1fr]">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge(
+                          req.status.name
+                        )}`}
+                      >
+                        {req.status.name}
+                      </span>
+                      <span
+                        className={`text-xs font-medium ${priorityTone(
+                          req.priority.name
+                        )}`}
+                      >
+                        {req.priority.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(req.dateRequested).toLocaleString()}
+                      </span>
+                    </div>
+                    <h3 className="text-gray-900 font-semibold">{req.subject}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {req.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                      <span className="px-2 py-1 rounded-full bg-gray-100">
+                        {req.requestType.name}
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-gray-100">
+                        {req.process.name}
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-gray-100">
+                        {req.location}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-gray-900 font-semibold">{req.subject}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">
-                    {req.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-xs text-gray-600">
-                    <span className="px-2 py-1 rounded-full bg-gray-100">
-                      {req.requestType.name}
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-gray-100">
-                      {req.process.name}
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-gray-100">
-                      {req.location}
-                    </span>
+                  <div className="flex flex-col gap-2 text-sm text-gray-700">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Solicitante</span>
+                      <span className="font-medium">
+                        {req.requester.name} {req.requester.lastName}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Empresa</span>
+                      <span className="font-medium">{req.company.name}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 text-sm text-gray-700">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Solicitante</span>
-                    <span className="font-medium">
-                      {req.requester.name} {req.requester.lastName}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Empresa</span>
-                    <span className="font-medium">{req.company.name}</span>
-                  </div>
-                </div>
-              </div>
+              </Link>
             ))}
             {requests.length === 0 && (
               <div className="p-6 text-sm text-gray-500">

@@ -1,5 +1,6 @@
 import React from "react";
 import { Building, Monitor } from "lucide-react";
+import Link from "next/link";
 
 const RequestSummaryCard = ({ request }) => {
   const statusName = request.status?.name || "Pending";
@@ -43,7 +44,11 @@ const RequestSummaryCard = ({ request }) => {
               {priorityName}
             </span>
           </div>
-          <h4 className="font-medium text-gray-900 mb-1">{request.subject}</h4>
+          <Link href={`/requests/${request.id}`}>
+            <h4 className="font-medium text-gray-900 mb-1 hover:text-blue-700">
+              {request.subject}
+            </h4>
+          </Link>
           <p className="text-sm text-gray-600 mb-2 line-clamp-2">
             {request.description}
           </p>
