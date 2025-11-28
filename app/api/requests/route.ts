@@ -7,6 +7,7 @@ const includeRequest = {
   process: true,
   priority: true,
   status: true,
+  _count: { select: { pictures: true } },
   requester: {
     select: {
       id: true,
@@ -56,6 +57,7 @@ export async function GET(req: NextRequest) {
   const statusName = searchParams.get("status") || undefined;
   const companySlug = searchParams.get("company") || undefined;
   const userIdFilter = searchParams.get("userId") || undefined;
+  const isExport = searchParams.get("export") === "csv";
 
   const statusId = await resolveStatusId(statusName || undefined);
 
@@ -95,7 +97,43 @@ export async function GET(req: NextRequest) {
     include: includeRequest,
   });
 
-  return NextResponse.json(requests);
+  if (!isExport) {
+    return NextResponse.json(requests);
+  }
+
+  const rows = requests.map((r) => ({
+    Codigo: r.requestCode,
+    Asunto: r.subject,
+    Descripcion: r.description,
+    Ubicacion: r.location,
+    Fecha: new Date(r.dateRequested).toISOString(),
+    Estado: r.status.name,
+    Prioridad: r.priority.name,
+    Proceso: r.process.name,
+    Tipo: r.requestType.name,
+    Solicitante: `${r.requester.name} ${r.requester.lastName}`,
+    Correo: r.requester.email,
+    Empresa: r.company.name,
+    TieneFoto: (r._count?.pictures ?? 0) > 0 ? "Si" : "No",
+  }));
+
+  const headers = Object.keys(rows[0] || {});
+  const escape = (val: any) => {
+    const str = val === null || val === undefined ? "" : String(val);
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+  const csv =
+    headers.map(escape).join(",") +
+    "\n" +
+    rows.map((row) => headers.map((h) => escape((row as any)[h])).join(",")).join("\n");
+
+  return new NextResponse(csv, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/csv",
+      "Content-Disposition": "attachment; filename=\"requests.csv\"",
+    },
+  });
 }
 
 export async function POST(req: NextRequest) {

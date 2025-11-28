@@ -6,16 +6,18 @@ import { Filter, Loader2, RefreshCw, Search } from "lucide-react";
 
 type RequestItem = {
   id: number;
+  requestCode?: string;
   subject: string;
   description: string;
   location: string;
   dateRequested: string;
-  requestType: { id: number; name: string };
+  requestType: { id: number; name: string; code?: string };
   process: { id: string; name: string };
   priority: { id: number; name: string; number: number };
   status: { id: number; name: string };
   requester: { id: number; name: string; lastName: string; email: string };
   company: { id: number; name: string; slug: string };
+  _count?: { pictures: number };
 };
 
 type Me = {
@@ -101,6 +103,31 @@ const RequestsPage = () => {
         );
       }
       setRequests(filtered);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const exportExcel = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams();
+      if (statusFilter) params.set("status", statusFilter);
+      if (isSysAdmin && companyFilter) params.set("company", companyFilter);
+      if (isSysAdmin && userFilter) params.set("userId", userFilter);
+      params.set("export", "csv");
+      const res = await fetch(`/api/requests?${params.toString()}`);
+      if (!res.ok) throw new Error("No se pudo generar el reporte");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "requests.csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -225,6 +252,12 @@ const RequestsPage = () => {
             >
               <RefreshCw className="h-4 w-4" />
               <span>Actualizar</span>
+            </button>
+            <button
+              onClick={exportExcel}
+              className="inline-flex items-center space-x-2 text-sm text-white bg-green-600 px-3 py-2 rounded-lg hover:bg-green-700"
+            >
+              <span>Exportar Excel</span>
             </button>
           </div>
           <div className="flex flex-wrap gap-3 items-center text-sm text-gray-600">
