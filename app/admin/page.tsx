@@ -36,14 +36,7 @@ const actions = [
     href: "#",
     icon: <Gauge className="h-8 w-8 text-red-600" />,
     disabled: true,
-  },
-  {
-    title: "Vincular procesos a empresas",
-    description: "Asignaciones (próximamente)",
-    href: "#",
-    icon: <Link2 className="h-8 w-8 text-gray-600" />,
-    disabled: true,
-  },
+  }
 ];
 
 const AdminPage = () => {
