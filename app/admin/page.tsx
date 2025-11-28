@@ -25,18 +25,18 @@ const actions = [
   },
   {
     title: "Tipos de solicitud",
-    description: "Define Request Types (próximamente)",
-    href: "#",
+    description: "Define los tipos de solicitud",
+    href: "/request-types",
     icon: <Settings2 className="h-8 w-8 text-orange-600" />,
-    disabled: true,
+    disabled: false,
   },
   {
     title: "Prioridades",
-    description: "Configura prioridades (próximamente)",
-    href: "#",
+    description: "Configura prioridades",
+    href: "/priorities",
     icon: <Gauge className="h-8 w-8 text-red-600" />,
-    disabled: true,
-  }
+    disabled: false,
+  },
 ];
 
 const AdminPage = () => {
