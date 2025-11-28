@@ -65,7 +65,7 @@ model RequestType {
 }
 
 model Process {
-  id          String    @id
+  id    Int    @id @default(autoincrement())
   name        String    @unique
   description String
   code        String
@@ -95,7 +95,7 @@ model Request {
   id              Int           @id @default(autoincrement())
   requestTypeId   Int           @map("request_type_id")
   requesterId     Int           @map("requester_id")
-  processId       String        @map("process_id")
+  processId       Int        @map("process_id")
   subject         String
   location        String
   description     String

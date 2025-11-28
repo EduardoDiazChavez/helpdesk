@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
     subject: string;
     description: string;
     location: string;
-    processId: string;
+    processId: number;
     priorityId?: number;
     priorityName?: string;
     companySlug?: string;

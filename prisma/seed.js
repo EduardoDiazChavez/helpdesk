@@ -33,96 +33,115 @@ async function main() {
 
   const processes = [
     {
+      id: 1,
       code: "DI",
       name: "Direccion",
       description: "Descripción del proceso 1",
     },
     {
+      id: 2,
       code: "GI",
       name: "Gestion Interna",
       description: "Descripción del proceso 2",
     },
     {
+      id: 3,
       code: "AF",
       name: "Administración Finanzas",
       description: "Descripción del proceso 3",
     },
     {
+      id: 4,
       code: "AP",
       name: "Atención al Público",
       description: "Descripción del proceso 4",
     },
     {
+      id: 5,
       code: "AR",
       name: "Asuntos Regulatorios",
       description: "Descripción del proceso 5",
     },
     {
+      id: 6,
       code: "CO",
       name: "Compras",
       description: "Descripción del proceso 6",
     },
     {
+      id: 7,
       code: "CS",
       name: "Comsalud",
       description: "Descripción del proceso 7",
     },
     {
+      id: 8,
       code: "FA",
       name: "Farmacia",
       description: "Descripción del proceso 8",
     },
     {
+      id: 9,
       code: "ME",
       name: "Mercadeo",
       description: "Descripción del proceso 9",
     },
     {
+      id: 10,
       code: "MS",
       name: "Mantenimiento y Saneamiento",
       description: "Descripción del proceso 10",
     },
     {
+      id: 11,
       code: "AL",
       name: "Almacén",
       description: "Descripción del proceso 11",
     },
     {
+      id: 12,
       code: "PC",
       name: "Prevención y Control de Pérdidas",
       description: "Descripción del proceso 12",
     },
     {
+      id: 13,
       code: "TE",
       name: "Tecnología",
       description: "Descripción del proceso 13",
     },
     {
+      id: 14,
       code: "TH",
       name: "Talento Humano",
       description: "Descripción del proceso 14",
     },
     {
+      id: 15,
       code: "GS",
       name: "Gestión de Servicios para el cuidado de la salud",
       description: "Descripción del proceso 15",
     },
     {
+      id: 16,
       code: "GE",
       name: "Gestión de Estudios para el cuidado de la salud",
       description: "Descripción del proceso 15",
     },
     {
+      id: 17,
       code: "AC",
       name: "Aseguramiento de la Calidad",
       description: "Descripción del proceso 15",
     },
     {
+      id: 18,
       code: "CV",
       name: "Comercialización y Ventas",
       description: "Descripción del proceso 15",
     },
     {
+      id: 19,
       code: "SST",
       name: "Seguridad y Salud en el Trabajo",
       description: "Descripción del proceso 15",
@@ -142,6 +161,7 @@ async function main() {
           name: p.name,
           description: p.description,
           code: p.code,
+          id: p.id,
         },
       })
     )
