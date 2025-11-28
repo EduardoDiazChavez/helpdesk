@@ -18,10 +18,10 @@ const actions = [
   },
   {
     title: "Procesos",
-    description: "Catálogo de procesos (próximamente)",
-    href: "#",
+    description: "Catálogo de procesos",
+    href: "/processes",
     icon: <Workflow className="h-8 w-8 text-purple-600" />,
-    disabled: true,
+    disabled: false,
   },
   {
     title: "Tipos de solicitud",
