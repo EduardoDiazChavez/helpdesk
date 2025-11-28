@@ -16,9 +16,10 @@ const DashboardContent = () => {
       subject: formData.title,
       description: formData.description,
       location: formData.location,
-      processId: formData.proceso,
+      processId: Number(formData.proceso),
       priorityName: formData.priority,
       requestTypeName: typeName,
+      companySlug: formData.companySlug,
     };
 
     const res = await fetch("/api/requests", {

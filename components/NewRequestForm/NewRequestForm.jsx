@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { XCircle, Building, Monitor } from "lucide-react";
 const NewRequestForm = ({
   onSubmit,
@@ -18,6 +18,54 @@ const NewRequestForm = ({
   });
 
   const [errors, setErrors] = useState({});
+  const [processes, setProcesses] = useState([]);
+  const [loadingProcesses, setLoadingProcesses] = useState(true);
+  const [company, setCompany] = useState(null);
+  const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+    const fetchProcesses = async (companyId) => {
+      setLoadingProcesses(true);
+      setLoadError("");
+      try {
+        const res = await fetch(`/api/companies/${companyId}/processes`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error("No se pudieron cargar los procesos");
+        const data = await res.json();
+        const enabled = (data.processes || []).filter((p) => p.isEnabled);
+        setProcesses(enabled);
+        if (enabled.length > 0) {
+          setFormData((prev) => ({ ...prev, proceso: String(enabled[0].processId) }));
+        }
+      } catch (err) {
+        setLoadError((err).message);
+      } finally {
+        setLoadingProcesses(false);
+      }
+    };
+
+    const fetchUserCompany = async () => {
+      try {
+        const res = await fetch("/api/me");
+        if (!res.ok) throw new Error("No se pudo obtener la empresa del usuario");
+        const data = await res.json();
+        const userCompany = data.companies?.[0];
+        if (userCompany) {
+          setCompany(userCompany);
+          fetchProcesses(userCompany.id);
+        } else {
+          setLoadError("No tienes empresas asociadas.");
+          setLoadingProcesses(false);
+        }
+      } catch (err) {
+        setLoadError((err).message);
+        setLoadingProcesses(false);
+      }
+    };
+
+    fetchUserCompany();
+  }, []);
 
   const handleSubmit = () => {
     const newErrors = {};
@@ -34,7 +82,7 @@ const NewRequestForm = ({
       return;
     }
 
-    onSubmit(formData);
+    onSubmit({ ...formData, companySlug: company?.slug });
     setFormData({
       type: "maintenance",
       title: "",
@@ -115,20 +163,32 @@ const NewRequestForm = ({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Proceso *
               </label>
-              <select
-                value={formData.proceso}
-                onChange={(e) => handleChange("proceso", e.target.value)}
-                className={`h-10 w-full px-3  py-2 border rounded-lg focus:ring-0 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.proceso ? "border-red-300" : "border-gray-300"
-                }`}
-              >
-                <option value="">Seleccionar proceso</option>
-                {[].map((proceso) => (
-                  <option key={proceso.id} value={proceso.id}>
-                    {proceso.name}
+              <div className="space-y-2">
+                <select
+                  value={formData.proceso}
+                  onChange={(e) => handleChange("proceso", e.target.value)}
+                  disabled={loadingProcesses || processes.length === 0}
+                  className={`h-10 w-full px-3 py-2 border rounded-lg focus:ring-0 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.proceso ? "border-red-300" : "border-gray-300"
+                  } ${loadingProcesses ? "bg-gray-50 text-gray-500" : ""}`}
+                >
+                  <option value="">
+                    {loadingProcesses
+                      ? "Cargando procesos..."
+                      : processes.length === 0
+                      ? "Sin procesos disponibles"
+                      : "Seleccionar proceso"}
                   </option>
-                ))}
-              </select>
+                  {processes.map((proceso) => (
+                    <option key={proceso.processId} value={proceso.processId}>
+                      {proceso.process.code} - {proceso.process.name}
+                    </option>
+                  ))}
+                </select>
+                {loadError && (
+                  <p className="text-xs text-red-500">{loadError}</p>
+                )}
+              </div>
               {errors.proceso && (
                 <p className="text-red-500 text-xs mt-1">{errors.proceso}</p>
               )}
