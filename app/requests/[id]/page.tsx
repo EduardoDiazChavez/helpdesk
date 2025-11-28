@@ -292,9 +292,14 @@ const RequestDetailPage = () => {
             {translateStatus(request.status?.name)}
           </span>
         </div>
-        <span className={`text-sm font-semibold ${priorityTone(request.priority?.name)}`}>
-          {request.priority?.name}
-        </span>
+        <div className="flex items-center space-x-3">
+          <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
+            #{request.requestCode || request.id}
+          </span>
+          <span className={`text-sm font-semibold ${priorityTone(request.priority?.name)}`}>
+            {request.priority?.name}
+          </span>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">

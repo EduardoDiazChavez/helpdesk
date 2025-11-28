@@ -6,6 +6,7 @@ import { Loader2, Plus, Trash2, Pencil, Tags } from "lucide-react";
 type RequestType = {
   id: number;
   name: string;
+  code: string;
   _count?: { requests: number };
 };
 
@@ -20,8 +21,10 @@ const RequestTypesPage = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [code, setCode] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
+  const [editCode, setEditCode] = useState("");
 
   const load = async () => {
     setLoading(true);
@@ -44,17 +47,18 @@ const RequestTypesPage = () => {
 
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !code.trim()) return;
     setSaving(true);
     setError(null);
     try {
       const res = await fetch("/api/request-types", {
         method: "POST",
         headers: adminHeaders,
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, code }),
       });
       if (!res.ok) throw new Error("No se pudo crear el tipo");
       setName("");
+      setCode("");
       await load();
     } catch (err) {
       setError((err as Error).message);
@@ -66,21 +70,23 @@ const RequestTypesPage = () => {
   const startEdit = (type: RequestType) => {
     setEditingId(type.id);
     setEditName(type.name);
+    setEditCode(type.code);
   };
 
   const handleUpdate = async (id: number) => {
-    if (!editName.trim()) return;
+    if (!editName.trim() || !editCode.trim()) return;
     setSaving(true);
     setError(null);
     try {
       const res = await fetch(`/api/request-types/${id}`, {
         method: "PUT",
         headers: adminHeaders,
-        body: JSON.stringify({ name: editName }),
+        body: JSON.stringify({ name: editName, code: editCode }),
       });
       if (!res.ok) throw new Error("No se pudo actualizar el tipo");
       setEditingId(null);
       setEditName("");
+      setEditCode("");
       await load();
     } catch (err) {
       setError((err as Error).message);
@@ -160,6 +166,18 @@ const RequestTypesPage = () => {
                   placeholder="Mantenimiento"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Código
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  required
+                  placeholder="MT"
+                />
+              </div>
               <button
                 type="submit"
                 disabled={saving}
@@ -202,11 +220,18 @@ const RequestTypesPage = () => {
                   >
                     <div className="flex-1">
                       {editingId === type.id ? (
-                        <input
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                        />
+                        <div className="grid grid-cols-3 gap-3">
+                          <input
+                            className="col-span-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                          />
+                          <input
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase"
+                            value={editCode}
+                            onChange={(e) => setEditCode(e.target.value)}
+                          />
+                        </div>
                       ) : (
                         <div className="flex items-center space-x-3">
                           <span className="h-9 w-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700 font-semibold">
@@ -216,6 +241,7 @@ const RequestTypesPage = () => {
                             <p className="font-semibold text-gray-900">
                               {type.name}
                             </p>
+                            <p className="text-sm text-gray-600">Código: {type.code}</p>
                             <p className="text-xs text-blue-600">
                               {type._count?.requests ?? 0} solicitudes
                             </p>

@@ -15,15 +15,18 @@ export async function PUT(
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
 
-  const { name } = (await req.json()) as { name?: string };
-  if (!name) {
-    return NextResponse.json({ error: "name is required" }, { status: 400 });
+  const { name, code } = (await req.json()) as { name?: string; code?: string };
+  if (!name || !code) {
+    return NextResponse.json(
+      { error: "name and code are required" },
+      { status: 400 }
+    );
   }
 
   try {
     const updated = await prisma.requestType.update({
       where: { id: typeId },
-      data: { name },
+      data: { name, code },
     });
     return NextResponse.json(updated);
   } catch (error: unknown) {

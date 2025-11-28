@@ -60,6 +60,7 @@ model Role {
 model RequestType {
   id        Int       @id @default(autoincrement())
   name      String    @unique
+  code      String    @unique
   requests  Request[]
 
   @@map("request_type")
@@ -98,6 +99,7 @@ model Request {
   requestTypeId   Int           @map("request_type_id")
   requesterId     Int           @map("requester_id")
   processId       Int           @map("process_id")
+  requestCode     String        @map("request_code")
   subject         String
   location        String
   description     String

@@ -20,13 +20,16 @@ async function main() {
     )
   );
 
-  const requestTypes = ["Mantenimiento", "Soporte Tecnico"];
+  const requestTypes = [
+    { name: "Mantenimiento", code: "MT" },
+    { name: "Soporte Tecnico", code: "ST" },
+  ];
   await Promise.all(
-    requestTypes.map((name) =>
+    requestTypes.map(({ name, code }) =>
       prisma.requestType.upsert({
         where: { name },
-        update: {},
-        create: { name },
+        update: { code },
+        create: { name, code },
       })
     )
   );

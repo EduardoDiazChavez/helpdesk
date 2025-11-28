@@ -20,13 +20,13 @@ export async function POST(req: NextRequest) {
   const forbidden = await requireSystemAdmin(req);
   if (forbidden) return forbidden;
 
-  const { name } = (await req.json()) as { name?: string };
-  if (!name) {
-    return NextResponse.json({ error: "name is required" }, { status: 400 });
+  const { name, code } = (await req.json()) as { name?: string; code?: string };
+  if (!name || !code) {
+    return NextResponse.json({ error: "name and code are required" }, { status: 400 });
   }
 
   try {
-    const type = await prisma.requestType.create({ data: { name } });
+    const type = await prisma.requestType.create({ data: { name, code } });
     return NextResponse.json(type, { status: 201 });
   } catch (error: unknown) {
     console.error("Error creating request type", error);

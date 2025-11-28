@@ -142,6 +142,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const requestType = await prisma.requestType.findUnique({
+    where: { id: requestTypeId },
+  });
+
+  if (!requestType?.code) {
+    return NextResponse.json(
+      { error: "El tipo de solicitud no tiene código asignado" },
+      { status: 400 }
+    );
+  }
+
   const requester = await prisma.user.findUnique({
     where: { id: session.userId },
     include: {
@@ -178,11 +189,29 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const last = await prisma.request.findFirst({
+    where: { requestTypeId },
+    orderBy: { requestCode: "desc" },
+    select: { requestCode: true },
+  });
+  let nextSequence = 1;
+  if (last?.requestCode) {
+    const match = last.requestCode.match(/-(\d+)$/);
+    if (match) {
+      nextSequence = Number(match[1]) + 1;
+    } else {
+      const count = await prisma.request.count({ where: { requestTypeId } });
+      nextSequence = count + 1;
+    }
+  }
+  const requestCode = `${requestType.code}-${String(nextSequence).padStart(3, "0")}`;
+
   const request = await prisma.request.create({
     data: {
       requestTypeId,
       requesterId: requester.id,
       processId: body.processId,
+      requestCode,
       subject: body.subject,
       location: body.location,
       description: body.description,
