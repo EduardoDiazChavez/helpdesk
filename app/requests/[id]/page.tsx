@@ -64,6 +64,12 @@ const RequestDetailPage = () => {
     label: string;
   } | null>(null);
   const [comment, setComment] = useState("");
+  const [pictures, setPictures] = useState<any[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{ url: string; date: string } | null>(
+    null
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -74,6 +80,11 @@ const RequestDetailPage = () => {
         if (!res.ok) throw new Error("No se pudo cargar la solicitud");
         const data = await res.json();
         setRequest(data);
+        const picsRes = await fetch(`/api/requests/${params.id}/pictures`);
+        if (picsRes.ok) {
+          const pics = await picsRes.json();
+          setPictures(pics);
+        }
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -114,6 +125,11 @@ const RequestDetailPage = () => {
       if (!res.ok) throw new Error("No se pudo cargar la solicitud");
       const data = await res.json();
       setRequest(data);
+      const picsRes = await fetch(`/api/requests/${params.id}/pictures`);
+      if (picsRes.ok) {
+        const pics = await picsRes.json();
+        setPictures(pics);
+      }
     } catch (err) {
       setError((err as Error).message);
     }
@@ -137,6 +153,66 @@ const RequestDetailPage = () => {
       setError((err as Error).message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const canUpload =
+    request.status?.name !== "Completed" && request.status?.name !== "Cancelled";
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`/api/requests/${params.id}/pictures`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "No se pudo subir la imagen");
+      }
+      await refresh();
+    } catch (err) {
+      setUploadError((err as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!canUpload) return;
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleUpload(file);
+  };
+
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleUpload(file);
+  };
+
+  const handleDeletePicture = async (pic: any) => {
+    if (!canUpload) return;
+    const file = pic.pictureUrl?.split("/").pop();
+    if (!file) return;
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const res = await fetch(
+        `/api/requests/${params.id}/pictures/${file}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "No se pudo eliminar la imagen");
+      }
+      await refresh();
+    } catch (err) {
+      setUploadError((err as Error).message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -302,6 +378,115 @@ const RequestDetailPage = () => {
           {request.description}
         </p>
       </div>
+
+
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center space-x-2">
+          <FileText className="h-5 w-5 text-gray-500" />
+          <h2 className="font-semibold text-gray-900">Imágenes</h2>
+          {!canUpload && (
+            <span className="text-xs text-gray-500">
+              Solo se permiten cargas en estado pendiente/en progreso
+            </span>
+          )}
+        </div>
+        <div
+          onDrop={onDrop}
+          onDragOver={(e) => e.preventDefault()}
+          className={`border-2 border-dashed rounded-lg p-4 text-center ${
+            canUpload
+              ? "border-blue-200 bg-blue-50 hover:bg-blue-100 cursor-pointer"
+              : "border-gray-200 bg-gray-50 cursor-not-allowed"
+          }`}
+          onClick={() => {
+            if (!canUpload) return;
+            document.getElementById("picture-upload")?.click();
+          }}
+        >
+          <input
+            id="picture-upload"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={onSelectFile}
+            disabled={!canUpload}
+          />
+          <p className="text-sm text-gray-700">
+            {canUpload
+              ? "Haz clic o suelta una imagen aquí para subirla"
+              : "Carga deshabilitada"}
+          </p>
+          {uploading && (
+            <div className="mt-2 flex items-center justify-center text-blue-600 text-sm">
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              Subiendo imagen...
+            </div>
+          )}
+          {uploadError && (
+            <p className="text-xs text-red-500 mt-2">{uploadError}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {pictures.map((pic) => (
+            <div
+              key={pic.id}
+              className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 relative group"
+            >
+              <img
+                src={pic.pictureUrl}
+                alt="request"
+                className="w-full h-32 object-cover cursor-pointer"
+                onClick={() =>
+                  setLightbox({
+                    url: pic.pictureUrl,
+                    date: new Date(pic.dateCreated).toLocaleString(),
+                  })
+                }
+              />
+              <p className="text-xs text-gray-500 px-2 py-1">
+                {new Date(pic.dateCreated).toLocaleString()}
+              </p>
+              {canUpload && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeletePicture(pic);
+                  }}
+                  className="absolute top-2 right-2 bg-white border border-red-200 rounded-full p-1 text-xs text-red-600 shadow hover:bg-red-50"
+                  title="Eliminar imagen"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          ))}
+          {pictures.length === 0 && (
+            <p className="text-sm text-gray-500">No hay imágenes aún.</p>
+          )}
+        </div>
+      </div>
+
+      {lightbox && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-4xl w-full overflow-hidden">
+            <button
+              onClick={() => setLightbox(null)}
+              className="absolute top-3 right-3 bg-white/90 border border-gray-200 rounded-full px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 shadow"
+            >
+              Cerrar
+            </button>
+            <img
+              src={lightbox.url}
+              alt="Vista ampliada"
+              className="w-full max-h-[80vh] object-contain bg-black"
+            />
+            <div className="px-4 py-3 text-xs text-gray-500 border-t border-gray-200">
+              {lightbox.date}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
         <div className="flex items-center space-x-2">

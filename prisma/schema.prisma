@@ -113,6 +113,7 @@ model Request {
   status      RequestStatus @relation(fields: [requestStatusId], references: [id])
   company     Company     @relation(fields: [companyId], references: [id])
   logs        RequestLog[]
+  pictures    RequestPicture[]
 
   @@map("request")
 }
@@ -141,4 +142,15 @@ model RequestLog {
   user    User    @relation(fields: [userId], references: [id])
 
   @@map("request_log")
+}
+
+model RequestPicture {
+  id          Int      @id @default(autoincrement())
+  requestId   Int      @map("request_id")
+  pictureUrl  String   @map("picture_url")
+  dateCreated DateTime @default(now()) @map("date_created")
+
+  request Request @relation(fields: [requestId], references: [id])
+
+  @@map("request_picture")
 }

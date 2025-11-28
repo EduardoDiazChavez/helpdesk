@@ -19,4 +19,4 @@ ENV DATABASE_URL="file:./prisma/dev.db"
 EXPOSE 3000
 
 # Push schema and seed on container start if the DB is empty
-CMD npx prisma db push && npm run db:seed && npm run start
+CMD npx prisma db push --accept-data-loss && npm run db:seed && npm run start
