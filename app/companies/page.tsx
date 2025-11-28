@@ -463,6 +463,13 @@ const CompaniesPage = () => {
                             <Trash2 className="h-4 w-4" />
                             <span>Eliminar</span>
                           </button>
+                          <button
+                            onClick={() => window.open(`/companies/${company.id}`, "_self")}
+                            className="px-3 py-2 text-sm border border-blue-200 text-blue-700 rounded-lg hover:bg-blue-50 inline-flex items-center space-x-1"
+                          >
+                            <Plus className="h-4 w-4" />
+                            <span>Procesos</span>
+                          </button>
                         </>
                       )}
                     </div>
