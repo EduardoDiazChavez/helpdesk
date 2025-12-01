@@ -1,0 +1,17 @@
+services:
+  helpdesk:
+    build: .
+    environment:
+      NODE_ENV: production
+      PORT: 8081
+      DATABASE_URL: file:./prisma/dev.db
+    ports:
+      - "8081:8081"
+    volumes:
+      - prisma-data:/app/prisma
+      - request-pictures:/app/tmp/request-pictures
+    restart: unless-stopped
+
+volumes:
+  prisma-data:
+  request-pictures:
